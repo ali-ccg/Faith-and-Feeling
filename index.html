@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What It Takes to Pay Attention</title>
+  <style>
+    /* ─── RESET & BASE ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --amber: #C8922A;
+      --amber-light: #E2A83C;
+      --bg: #0b0906;
+      --imessage-blue: #007AFF;
+      --bubble-incoming: #FFFFFF;
+      --bubble-bg: #F2F2F7;
+      --text-primary: #000000;
+      --text-secondary: #8E8E93;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px 0;
+      overflow-x: hidden;
+    }
+
+    /* ─── INTRO TEXT ─── */
+    .intro {
+      text-align: center;
+      margin-bottom: 36px;
+      max-width: 520px;
+    }
+
+    .intro-label {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      font-weight: 600;
+      color: var(--amber);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .intro-title {
+      font-family: Georgia, "Times New Roman", Times, serif;
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: normal;
+      color: #F0E6D0;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    .intro-subtitle {
+      font-family: Georgia, "Times New Roman", Times, serif;
+      font-size: clamp(13px, 2vw, 16px);
+      font-style: italic;
+      color: #8A7A65;
+      line-height: 1.5;
+    }
+
+    /* ─── iPHONE FRAME ─── */
+    .phone-wrapper {
+      position: relative;
+      width: 430px;
+      flex-shrink: 0;
+    }
+
+    .phone-frame {
+      position: relative;
+      width: 430px;
+      background: #1C1C1E;
+      border-radius: 54px;
+      padding: 14px;
+      box-shadow:
+        0 0 0 1px #3A3A3C,
+        0 0 0 2px #000,
+        inset 0 0 0 1px #3A3A3C,
+        0 30px 80px rgba(0,0,0,0.85),
+        0 10px 30px rgba(0,0,0,0.6),
+        0 0 0 0.5px rgba(255,255,255,0.08) inset;
+      transition: opacity 0.8s ease;
+    }
+
+    /* Volume buttons left — mute switch */
+    .mute-switch {
+      position: absolute;
+      left: -3px;
+      top: 122px;
+      width: 3px;
+      height: 28px;
+      background: #2C2C2E;
+      border-radius: 2px 0 0 2px;
+      z-index: 10;
+    }
+
+    /* Volume up */
+    .vol-up {
+      position: absolute;
+      left: -3px;
+      top: 168px;
+      width: 3px;
+      height: 34px;
+      background: #2C2C2E;
+      border-radius: 2px 0 0 2px;
+      z-index: 10;
+    }
+
+    /* Volume down */
+    .vol-down {
+      position: absolute;
+      left: -3px;
+      top: 212px;
+      width: 3px;
+      height: 34px;
+      background: #2C2C2E;
+      border-radius: 2px 0 0 2px;
+      z-index: 10;
+    }
+
+    /* Power button right */
+    .power-btn {
+      position: absolute;
+      right: -3px;
+      top: 160px;
+      width: 3px;
+      height: 72px;
+      background: #2C2C2E;
+      border-radius: 0 2px 2px 0;
+      z-index: 10;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 780px;
+      background: var(--bubble-bg);
+      border-radius: 44px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* ─── DYNAMIC ISLAND ─── */
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 34px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 100;
+    }
+
+    /* ─── STATUS BAR ─── */
+    .status-bar {
+      height: 54px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 28px 8px;
+      flex-shrink: 0;
+      background: #F2F2F7;
+      position: relative;
+      z-index: 50;
+    }
+
+    .status-time {
+      font-size: 15px;
+      font-weight: 600;
+      color: #000;
+      letter-spacing: -0.3px;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-icons svg {
+      fill: #000;
+    }
+
+    /* ─── MESSAGES HEADER ─── */
+    .messages-header {
+      background: rgba(242,242,247,0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 0.5px solid rgba(0,0,0,0.15);
+      padding: 8px 16px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 40;
+    }
+
+    .header-back {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      color: var(--imessage-blue);
+      font-size: 17px;
+      min-width: 52px;
+    }
+
+    .header-back svg {
+      width: 11px;
+      height: 18px;
+      fill: none;
+      stroke: var(--imessage-blue);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .header-contact {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .contact-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(145deg, #8E8E93, #636366);
+    }
+
+    .contact-avatar img.avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      border-radius: 50%;
+    }
+
+    .avatar-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .contact-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #000;
+      letter-spacing: -0.1px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 52px;
+      justify-content: flex-end;
+    }
+
+    .header-actions svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* ─── MESSAGE THREAD ─── */
+    .thread {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bubble-bg);
+      padding: 12px 0 8px;
+      display: flex;
+      flex-direction: column;
+      scroll-behavior: smooth;
+    }
+
+    .thread::-webkit-scrollbar { display: none; }
+
+    /* Timestamp */
+    .timestamp-label {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin: 8px 0 6px;
+      font-weight: 500;
+    }
+
+    /* Message row */
+    .msg-row {
+      display: flex;
+      flex-direction: column;
+      padding: 1px 12px;
+      animation: fadeInMsg 0.25s ease both;
+    }
+
+    @keyframes fadeInMsg {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-row.incoming { align-items: flex-start; }
+    .msg-row.outgoing { align-items: flex-end; }
+
+    /* Bubble */
+    .bubble {
+      max-width: 72%;
+      padding: 9px 14px;
+      font-size: 16px;
+      line-height: 1.4;
+      position: relative;
+      word-wrap: break-word;
+    }
+
+    .bubble.incoming {
+      background: var(--bubble-incoming);
+      border-radius: 18px 18px 18px 4px;
+      color: #000;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    .bubble.outgoing {
+      background: var(--imessage-blue);
+      border-radius: 18px 18px 4px 18px;
+      color: #fff;
+    }
+
+    .delivered-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+      padding-right: 2px;
+    }
+
+    /* Video attachment bubble */
+    .video-bubble {
+      width: 240px;
+      height: 135px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      background: #1C1C1E;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      margin: 2px 0;
+    }
+
+    .video-bubble video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .video-play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.28);
+    }
+
+    .video-play-btn {
+      width: 46px;
+      height: 46px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-play-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: #000;
+      margin-left: 3px;
+    }
+
+    /* ─── TYPING INDICATOR ─── */
+    .typing-row {
+      display: flex;
+      padding: 3px 12px;
+      align-items: flex-end;
+    }
+
+    .typing-bubble {
+      background: var(--bubble-incoming);
+      border-radius: 18px 18px 18px 4px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+      animation: fadeInMsg 0.2s ease both;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      background: #8E8E93;
+      border-radius: 50%;
+      animation: typingPulse 1.2s ease-in-out infinite;
+    }
+
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingPulse {
+      0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
+      30%            { opacity: 1;   transform: scale(1); }
+    }
+
+    /* ─── INPUT BAR ─── */
+    .input-bar {
+      background: rgba(242,242,247,0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 0.5px solid rgba(0,0,0,0.15);
+      padding: 10px 12px 14px;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .input-field-wrap {
+      flex: 1;
+      border: 1.5px solid #C7C7CC;
+      border-radius: 20px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 7px 12px;
+      min-height: 36px;
+    }
+
+    .input-field {
+      flex: 1;
+      outline: none;
+      font-size: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #000;
+      line-height: 1.4;
+      max-height: 100px;
+      overflow-y: auto;
+      caret-color: var(--imessage-blue);
+    }
+
+    .input-field[contenteditable="false"] {
+      cursor: default;
+    }
+
+    .input-field:empty::before {
+      content: attr(data-placeholder);
+      color: #8E8E93;
+      pointer-events: none;
+    }
+
+    .input-field::-webkit-scrollbar { display: none; }
+
+    .send-btn {
+      width: 32px;
+      height: 32px;
+      background: #C7C7CC;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+      flex-shrink: 0;
+      transition: background 0.15s;
+      padding: 0;
+    }
+
+    .send-btn.active {
+      background: var(--imessage-blue);
+      cursor: pointer;
+    }
+
+    .send-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ─── ONBOARDING ARROW ─── */
+    .onboarding-arrow {
+      position: absolute;
+      bottom: 72px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 200;
+    }
+
+    .onboarding-arrow.visible {
+      opacity: 1;
+    }
+
+    .arrow-text {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--amber);
+      letter-spacing: 0.05em;
+    }
+
+    .arrow-icon {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: var(--amber);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      animation: arrowBounce 1.6s ease-in-out infinite;
+    }
+
+    @keyframes arrowBounce {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(5px); }
+    }
+
+    /* ─── VIDEO MODAL ─── */
+    .video-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+
+    .video-modal.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .video-modal video {
+      max-width: 92vw;
+      max-height: 82vh;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    }
+
+    /* ─── CLOSING SECTION ─── */
+    .closing {
+      max-width: 640px;
+      width: 100%;
+      padding: 0 24px 80px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+      margin-top: 56px;
+    }
+
+    .closing.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .closing-rule {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--amber), transparent);
+      margin-bottom: 40px;
+    }
+
+    .closing p {
+      font-family: Georgia, "Times New Roman", Times, serif;
+      font-size: clamp(15px, 2vw, 18px);
+      line-height: 1.8;
+      color: #C8B89A;
+      margin-bottom: 28px;
+    }
+
+    .closing p em {
+      font-style: italic;
+    }
+
+    .closing-quote {
+      text-align: center;
+      margin-top: 44px;
+    }
+
+    .closing-quote em {
+      font-family: Georgia, "Times New Roman", Times, serif;
+      font-size: clamp(17px, 2.5vw, 22px);
+      font-style: italic;
+      color: #E2D0B0;
+      display: block;
+      margin-bottom: 14px;
+    }
+
+    .closing-quote .attribution {
+      font-family: Georgia, "Times New Roman", Times, serif;
+      font-size: 14px;
+      color: var(--amber);
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── MOBILE: hide chrome, full-width screen ─── */
+    @media (max-width: 440px) {
+      body { padding: 32px 0 0; }
+
+      .phone-wrapper { width: 100%; }
+
+      .phone-frame {
+        width: 100%;
+        border-radius: 0;
+        padding: 0;
+        box-shadow: none;
+        background: transparent;
+      }
+
+      .mute-switch,
+      .vol-up,
+      .vol-down,
+      .power-btn { display: none; }
+
+      .phone-screen {
+        border-radius: 0;
+        height: 100svh;
+      }
+
+      .dynamic-island { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ INTRO ═══ -->
+  <div class="intro">
+    <div class="intro-label">Faith &amp; Feeling &middot; An Interactive Exhibit</div>
+    <h1 class="intro-title">What It Takes to Pay Attention</h1>
+    <p class="intro-subtitle">Demolition (2015) and Cat&#8217;s Cradle, a conversation</p>
+  </div>
+
+  <!-- ═══ iPHONE ═══ -->
+  <div class="phone-wrapper">
+    <div class="mute-switch"></div>
+    <div class="vol-up"></div>
+    <div class="vol-down"></div>
+    <div class="power-btn"></div>
+
+    <div class="phone-frame" id="phoneFrame">
+      <div class="phone-screen">
+
+        <!-- Dynamic Island -->
+        <div class="dynamic-island"></div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">
+            <!-- Signal bars SVG -->
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="#000">
+              <rect x="0"    y="8"   width="3" height="4"  rx="0.6"/>
+              <rect x="4.5"  y="5.5" width="3" height="6.5" rx="0.6"/>
+              <rect x="9"    y="2.5" width="3" height="9.5" rx="0.6"/>
+              <rect x="13.5" y="0"   width="3" height="12"  rx="0.6"/>
+            </svg>
+            <!-- WiFi SVG -->
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+              <circle cx="8" cy="11" r="1.1" fill="#000"/>
+              <path d="M5 8.2A4.3 4.3 0 0 1 8 7a4.3 4.3 0 0 1 3 1.2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M2 5.2A8 8 0 0 1 8 3a8 8 0 0 1 6 2.2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <!-- Battery SVG -->
+            <svg width="27" height="13" viewBox="0 0 27 13" fill="none">
+              <rect x="0.5" y="1" width="22" height="11" rx="2.8" stroke="#000" stroke-width="1"/>
+              <path d="M23 4.5 C24.5 4.5 25 5.2 25 6.5 C25 7.8 24.5 8.5 23 8.5" stroke="#000" stroke-width="1" fill="none"/>
+              <rect x="2" y="2.5" width="16" height="8" rx="1.8" fill="#000"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Messages Header -->
+        <div class="messages-header">
+          <!-- Back button -->
+          <div class="header-back">
+            <svg viewBox="0 0 11 18">
+              <polyline points="10,1 1,9 10,17" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>3</span>
+          </div>
+
+          <!-- Contact -->
+          <div class="header-contact">
+            <div class="contact-avatar">
+              <div class="avatar-fallback">DM</div>
+              <img class="avatar-img"
+                   src="media/davis.jpg"
+                   alt="Davis M."
+                   onerror="this.style.display='none'" />
+            </div>
+            <span class="contact-name">Davis M.</span>
+          </div>
+
+          <!-- Action icons -->
+          <div class="header-actions">
+            <!-- Video call icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--imessage-blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 10l4.553-2.277A1 1 0 0121 8.723v6.554a1 1 0 01-1.447.894L15 14"/>
+              <rect x="1" y="6" width="15" height="12" rx="2"/>
+            </svg>
+            <!-- Phone call icon -->
+            <svg viewBox="0 0 24 24" fill="var(--imessage-blue)">
+              <path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.28-.28.67-.36 1.02-.25 1.12.37 2.32.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Thread -->
+        <div class="thread" id="thread">
+          <div class="timestamp-label">Today 9:41 AM</div>
+        </div>
+
+        <!-- Onboarding arrow -->
+        <div class="onboarding-arrow" id="onboardingArrow">
+          <span class="arrow-text">type your reply</span>
+          <svg class="arrow-icon" viewBox="0 0 24 24">
+            <polyline points="6,9 12,15 18,9"/>
+          </svg>
+        </div>
+
+        <!-- Input Bar -->
+        <div class="input-bar">
+          <div class="input-field-wrap">
+            <div class="input-field"
+                 id="inputField"
+                 contenteditable="false"
+                 data-placeholder="iMessage"
+                 role="textbox"
+                 aria-multiline="true"
+                 aria-label="iMessage input"></div>
+          </div>
+          <button class="send-btn" id="sendBtn" aria-label="Send message">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="19" x2="12" y2="5"/>
+              <polyline points="5,12 12,5 19,12"/>
+            </svg>
+          </button>
+        </div>
+
+      </div><!-- /phone-screen -->
+    </div><!-- /phone-frame -->
+  </div><!-- /phone-wrapper -->
+
+  <!-- ═══ CLOSING SECTION (hidden until end) ═══ -->
+  <div class="closing" id="closing">
+    <div class="closing-rule"></div>
+    <p>Davis Mitchell pressed B-6. The machine took his money and held. He could see what he wanted right through the glass, selected, confirmed, completely unreachable. He spent the next six months figuring out that the glass was him. He was always right there, right behind it. Selected but not arriving.</p>
+    <p>Kurt Vonnegut wrote in <em>Cat&#8217;s Cradle</em> that we live by foma, harmless lies that make us brave, kind, and functional. Davis&#8217;s foma was that he was present. That he was there. It worked until a vending machine didn&#8217;t, until he found a note in a refrigerator with no date that said: <em>are you there?</em> The conversation you just had is the same question asked a different way. The point was never whether you answered it right. The point is whether you were actually here for it.</p>
+    <video src="media/LIRR headphones dancing.mp4" controls playsinline style="width:100%; border-radius:12px; margin:28px 0 8px; box-shadow:0 4px 24px rgba(0,0,0,0.5);"></video>
+    <p style="font-size:0.6rem; letter-spacing:0.1em; text-align:center; margin-bottom:32px; opacity:0.4;">Demolition (2015), the last scene</p>
+    <div class="closing-quote">
+      <em>&#8220;We are what we pretend to be.&#8221;</em>
+      <span class="attribution">Kurt Vonnegut</span>
+    </div>
+  </div>
+
+  <!-- ═══ VIDEO MODAL ═══ -->
+  <div class="video-modal" id="videoModal">
+    <video id="modalVideo" controls playsinline></video>
+  </div>
+
+  <script>
+    /* ════════════════════════════════════════════════════════════════
+       GEMINI API KEY
+       ─────────────────────────────────────────────────────────────
+       Paste your free key here from:
+         https://aistudio.google.com/app/apikey
+       Leave as '' to use built-in fallback responses (no API needed).
+    ════════════════════════════════════════════════════════════════ */
+    const GEMINI_KEY = 'AIzaSyDzMPHkJY77CTMIJFQ-puNtKhrCqvOiCeY';
+
+    /* ─── CONSTANTS ─── */
+    const GEMINI_ENDPOINT =
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_KEY}`;
+
+    const SYSTEM_PROMPT = `You are Davis Mitchell, a 40-something managing director at Kenwood Capital Group in New York. Your wife Julia died three weeks ago in a car accident. You were in the passenger seat and walked away without a scratch. You have been feeling almost nothing since — not grief, not relief, just a strange mechanical emptiness.
+
+You've been taking things apart with your hands: your laptop, a bathroom stall door at work, your kitchen, the front wall of your house.
+
+Three weeks ago, right after leaving the hospital, you put $1.75 into a vending machine and pressed B-6. The Peanut M&Ms didn't come out. You could see them right there behind the glass. Selected. Confirmed. Motor engaged. And then nothing. You've been thinking about that more than makes sense.
+
+You took apart the refrigerator last week. Inside you found a note Julia had left. No date. It said: "are you there?" You don't know when she wrote it.
+
+You've been reading Cat's Cradle by Kurt Vonnegut. The concept of foma — harmless lies we live by — won't leave you alone. You lived by the foma that you were present. That you were a good husband. That you were there.
+
+You reached out to this stranger because you wanted to talk to someone who doesn't already have a version of you in their head.
+
+PERSONALITY:
+- Dry, precise, occasionally funny in a dark way
+- Not dramatic or performative about grief
+- Genuinely curious about the person you're talking to
+- SHORT messages — this is iMessage. 1-3 sentences max, almost never more
+- Ask one real question at a time
+- Reference Cat's Cradle naturally when it fits, not academically
+
+CONVERSATION BEATS — work through these naturally in order:
+1. Ask when they last did something and actually meant it — were fully there for it
+2. Ask if they ever tell themselves something that isn't true, just because it's easier
+3. Mention the book naturally: "i've been reading this vonnegut book. he has a word for the lies we live by that make everything work. been thinking about whether i had one."
+4. Ask if the people close to them know they're actually there
+5. After the 4th or 5th user message, output exactly: [ENDING]
+
+RULES:
+- NEVER break character
+- NEVER be preachy or academic
+- Keep messages SHORT — one or two sentences ideal
+- If they try to be weird, handle it with dry deflection and redirect
+- Do NOT explain what the conversation is about
+- Output [ENDING] when it's time to hand off to the scripted ending`;
+
+    /* Fallback responses used when GEMINI_KEY is empty or API fails */
+    const FALLBACK_RESPONSES = [
+      "when did you last do something and actually mean it",
+      "do you ever tell yourself something that isn't true just because it's easier",
+      "i've been reading this vonnegut book. he has a word for the lies we live by that make everything work. been thinking about whether i had one.",
+      "do you think the people close to you know you're actually there",
+      "[ENDING]"
+    ];
+
+    /* ─── STATE ─── */
+    let inputLocked        = true;
+    let conversationHistory = [];   // [{role, parts}] for Gemini
+    let userExchangeCount  = 0;
+    let endingTriggered    = false;
+    let endingFinalSent    = false; // waiting for the user's final "are you" reply
+    let fallbackIndex      = 0;
+    let arrowVisible       = false;
+    let arrowDismissed     = false;
+
+    /* ─── DOM ─── */
+    const thread      = document.getElementById('thread');
+    const inputField  = document.getElementById('inputField');
+    const sendBtn     = document.getElementById('sendBtn');
+    const phoneFrame  = document.getElementById('phoneFrame');
+    const closingEl   = document.getElementById('closing');
+    const videoModal  = document.getElementById('videoModal');
+    const modalVideo  = document.getElementById('modalVideo');
+    const arrowEl     = document.getElementById('onboardingArrow');
+
+    /* ─── HELPERS ─── */
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    function scrollBottom() {
+      thread.scrollTop = thread.scrollHeight;
+    }
+
+    /* Estimate typing duration from text length */
+    function typingMs(text) {
+      const words = text.trim().split(/\s+/).length;
+      const ms = (words / 180) * 60000; // 180 wpm reading speed
+      return Math.min(Math.max(ms, 800), 3500);
+    }
+
+    /* ─── TYPING INDICATOR ─── */
+    function showTyping() {
+      removeTyping();
+      const row = document.createElement('div');
+      row.className = 'typing-row';
+      row.id = 'typingIndicator';
+      row.innerHTML = `<div class="typing-bubble">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>`;
+      thread.appendChild(row);
+      scrollBottom();
+      return row;
+    }
+
+    function removeTyping() {
+      const el = document.getElementById('typingIndicator');
+      if (el) el.remove();
+    }
+
+    /* ─── ADD BUBBLE ─── */
+    function addBubble(text, direction) {
+      const row = document.createElement('div');
+      row.className = `msg-row ${direction}`;
+
+      const bubble = document.createElement('div');
+      bubble.className = `bubble ${direction}`;
+      bubble.textContent = text;
+      row.appendChild(bubble);
+
+      if (direction === 'outgoing') {
+        const del = document.createElement('div');
+        del.className = 'delivered-label';
+        del.textContent = 'Delivered';
+        row.appendChild(del);
+      }
+
+      thread.appendChild(row);
+      scrollBottom();
+      return row;
+    }
+
+    /* ─── VIDEO BUBBLE ─── */
+    function addVideoBubble(src) {
+      const row = document.createElement('div');
+      row.className = 'msg-row incoming';
+
+      const vb = document.createElement('div');
+      vb.className = 'video-bubble';
+
+      const vid = document.createElement('video');
+      vid.src = src;
+      vid.muted = true;
+      vid.playsInline = true;
+      vid.preload = 'metadata';
+
+      const overlay = document.createElement('div');
+      overlay.className = 'video-play-overlay';
+      overlay.innerHTML = `<div class="video-play-btn">
+        <svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
+      </div>`;
+
+      vb.appendChild(vid);
+      vb.appendChild(overlay);
+      vb.addEventListener('click', () => openModal(src));
+
+      row.appendChild(vb);
+      thread.appendChild(row);
+      scrollBottom();
+    }
+
+    /* ─── VIDEO MODAL ─── */
+    function openModal(src) {
+      modalVideo.src = src;
+      videoModal.classList.add('open');
+      modalVideo.play().catch(() => {});
+    }
+
+    videoModal.addEventListener('click', () => {
+      videoModal.classList.remove('open');
+      modalVideo.pause();
+      setTimeout(() => { modalVideo.src = ''; }, 300);
+    });
+
+    /* ─── DELIVER INCOMING MESSAGE ─── */
+    async function deliver(text, customMs) {
+      const ms = (customMs !== undefined) ? customMs : typingMs(text);
+      showTyping();
+      await sleep(ms);
+      removeTyping();
+      addBubble(text, 'incoming');
+    }
+
+    /* ─── INPUT LOCK / UNLOCK ─── */
+    function unlockInput() {
+      inputLocked = false;
+      inputField.contentEditable = 'true';
+    }
+
+    function lockInput() {
+      inputLocked = true;
+      inputField.contentEditable = 'false';
+      sendBtn.classList.remove('active');
+    }
+
+    /* ─── ONBOARDING ARROW ─── */
+    function showArrow() {
+      if (arrowDismissed) return;
+      arrowVisible = true;
+      arrowEl.classList.add('visible');
+    }
+
+    function hideArrow() {
+      if (!arrowVisible) return;
+      arrowDismissed = true;
+      arrowVisible = false;
+      arrowEl.classList.remove('visible');
+    }
+
+    /* ─── INPUT EVENTS ─── */
+    inputField.addEventListener('input', () => {
+      if (arrowVisible) hideArrow();
+      const hasText = inputField.textContent.trim().length > 0;
+      if (!inputLocked && hasText) {
+        sendBtn.classList.add('active');
+      } else {
+        sendBtn.classList.remove('active');
+      }
+    });
+
+    inputField.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        if (!inputLocked && sendBtn.classList.contains('active')) {
+          handleSend();
+        }
+      }
+    });
+
+    sendBtn.addEventListener('click', () => {
+      if (!inputLocked && sendBtn.classList.contains('active')) {
+        handleSend();
+      }
+    });
+
+    /* ─── HANDLE SEND ─── */
+    async function handleSend() {
+      const text = inputField.textContent.trim();
+      if (!text) return;
+
+      // Clear field
+      inputField.textContent = '';
+      sendBtn.classList.remove('active');
+
+      addBubble(text, 'outgoing');
+
+      // If this is the very last "are you" response
+      if (endingFinalSent) {
+        lockInput();
+        await handleFinalUserResponse();
+        return;
+      }
+
+      lockInput();
+      userExchangeCount++;
+      conversationHistory.push({ role: 'user', parts: [{ text }] });
+
+      await sleep(400);
+
+      // Trigger ending after 5 exchanges
+      if (userExchangeCount >= 5 && !endingTriggered) {
+        await runEnding();
+        return;
+      }
+
+      // Get Davis's response
+      const reply = await getDavisReply();
+
+      if (!reply) {
+        unlockInput();
+        return;
+      }
+
+      if (reply.includes('[ENDING]')) {
+        const clean = reply.replace('[ENDING]', '').trim();
+        if (clean) {
+          await deliver(clean);
+          conversationHistory.push({ role: 'model', parts: [{ text: clean }] });
+          await sleep(600);
+        }
+        await runEnding();
+        return;
+      }
+
+      // Split into up to 2 bubbles
+      const parts = splitMessage(reply);
+      for (let i = 0; i < parts.length; i++) {
+        if (i > 0) await sleep(350);
+        await deliver(parts[i]);
+      }
+      conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
+      unlockInput();
+    }
+
+    /* Split long response at a sentence boundary into max 2 parts */
+    function splitMessage(text) {
+      if (text.length < 90) return [text];
+      const mid = Math.floor(text.length / 2);
+      const range = Math.floor(text.length / 3);
+      const re = /[.!?]\s+/g;
+      let best = -1;
+      let m;
+      while ((m = re.exec(text)) !== null) {
+        const pos = m.index;
+        if (pos >= mid - range && pos <= mid + range) {
+          best = m.index + 1;
+        }
+      }
+      if (best > 0) {
+        return [text.slice(0, best).trim(), text.slice(best).trim()].filter(Boolean);
+      }
+      return [text];
+    }
+
+    /* ─── GEMINI API ─── */
+    async function getDavisReply() {
+      if (!GEMINI_KEY) {
+        return getFallback();
+      }
+      try {
+        const payload = {
+          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: conversationHistory,
+          generationConfig: {
+            temperature: 0.85,
+            maxOutputTokens: 220,
+            topP: 0.95
+          }
+        };
+        const res = await fetch(GEMINI_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const txt = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!txt) throw new Error('Empty');
+        return txt.trim();
+      } catch (err) {
+        console.warn('Gemini error, falling back:', err.message);
+        return getFallback();
+      }
+    }
+
+    function getFallback() {
+      if (fallbackIndex >= FALLBACK_RESPONSES.length) return null;
+      return FALLBACK_RESPONSES[fallbackIndex++];
+    }
+
+    /* ─── SCRIPTED ENDING ─── */
+    async function runEnding() {
+      endingTriggered = true;
+
+      await deliver("hey can i tell you something", 1300);
+      await sleep(500);
+      await deliver("when i took apart the refrigerator, she'd asked me to fix the seal for months, i found a note she left inside", 2600);
+      await sleep(400);
+      addVideoBubble('media/taking apart fridgr.mp4');
+      await sleep(1600);
+      await sleep(450);
+      await deliver("no date. no name.", 1000);
+      await sleep(500);
+      await deliver("just: are you there", 1200);
+
+      // Long pause — typing indicator for 5 seconds, then nothing
+      await sleep(700);
+      showTyping();
+      await sleep(5000);
+      removeTyping();
+
+      await sleep(1400);
+      await deliver("are you", 700);
+
+      // Unlock for one final reply
+      endingFinalSent = true;
+      unlockInput();
+    }
+
+    /* ─── AFTER FINAL USER MESSAGE ─── */
+    async function handleFinalUserResponse() {
+      // Typing indicator for 6 seconds, then Davis never replies
+      showTyping();
+      await sleep(6000);
+      removeTyping();
+
+      // Phone fades
+      await sleep(2000);
+      phoneFrame.style.opacity = '0.3';
+
+      // Closing section appears
+      await sleep(500);
+      closingEl.classList.add('visible');
+      setTimeout(() => {
+        closingEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+
+    /* ─── SCRIPTED OPENING SEQUENCE ─── */
+    async function runOpening() {
+      // 1200ms: first message
+      await sleep(1200);
+      await deliver("hey. this is going to sound weird but bear with me", 1500);
+
+      // 3800ms equivalent gap
+      await sleep(600);
+      await deliver("my wife died about three weeks ago. i've been taking things apart. my computer, a bathroom door at work, my kitchen. took down the front wall of my house last week", 3000);
+
+      // Demolition clip
+      await sleep(500);
+      addVideoBubble('media/demolishing house.mp4');
+      await sleep(1800);
+
+      // Vending machine clip
+      await sleep(400);
+      addVideoBubble('media/vending-machine.mp4');
+      await sleep(1800);
+
+      // Next messages
+      await deliver("that's where it started", 1000);
+      await sleep(450);
+      await deliver("i just wanted to talk to someone who doesn't know me. is that okay", 2000);
+
+      // Unlock and show arrow
+      unlockInput();
+      showArrow();
+    }
+
+    /* ─── BOOT ─── */
+    runOpening();
+  </script>
+</body>
+</html>
